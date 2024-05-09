@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>User Detail Page</h1>
+<img src="{{ image_url }}">
+<span>{{ user.first_name }} {{ user.last_name }}</span>
+
+<a href="/users/{{ user.id }}/edit">
+    <button id="edit-user-button">Edit</button>
+</a>
+
+<!-- https://stackoverflow.com/a/58334867 -->
+<form id="delete-form" method="post" action="/users/{{ user.id }}/delete"></form>
+<a onclick="document.getElementById('delete-form').submit();">
+    <button id="delete-user-button">Delete</button>
+</a>
+{% endblock %}
