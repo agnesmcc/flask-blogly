@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>User Detail Page</h1>
-<img src="{{ image_url }}">
-<span>{{ user.first_name }} {{ user.last_name }}</span>
+
+<img src="{{ user.image_url }}" style="width:250px">
+<h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
 <a href="/users/{{ user.id }}/edit">
     <button id="edit-user-button">Edit</button>
 </a>
 
 <!-- https://stackoverflow.com/a/58334867 -->
-<form id="delete-form" method="post" action="/users/{{ user.id }}/delete"></form>
+<form id="delete-form" style='display:inline' method="post" action="/users/{{ user.id }}/delete"></form>
 <a onclick="document.getElementById('delete-form').submit();">
     <button id="delete-user-button">Delete</button>
+</a>
+
+<h2>Posts</h2>
+<ul>
+    {% for post in posts %}
+    <li><a href='/posts/{{ post.id }}'>{{ post.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<a href="/users/{{ user.id }}/posts/new">
+    <button type=button id="create-post-button">Add Post</button>
 </a>
 {% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+<a href="/users/{{ user.id }}">
+    <button id="cancel-edit-post-button">Cancel</button>
+</a>
+
+<a href="/posts/{{ post.id }}/edit">
+    <button id="edit-post-button">Edit</button>
+</a>
+
+<!-- https://stackoverflow.com/a/58334867 -->
+<form id="delete-form" method="post" action="/posts/{{ post.id }}/delete"></form>
+<a onclick="document.getElementById('delete-form').submit();">
+    <button id="delete-post-button">Delete</button>
+</a>
+
+{% endblock %}
