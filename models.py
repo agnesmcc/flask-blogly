@@ -32,10 +32,9 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, server_default=func.now())
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('users.id'),
+        db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
         )
-    user = db.relationship('User')
 
 
 

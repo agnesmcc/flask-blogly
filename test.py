@@ -65,29 +65,29 @@ class FlaskTests(TestCase):
             self.assertNotIn("Bob Smith", html)
             self.assertIn("Billy Smith", html)
 
-    # def test_get_post(self):
-    #     with app.test_client() as client:
-    #         resp = client.get(f"/posts/{self.post.id}")
-    #         html = resp.get_data(as_text=True)
+    def test_get_post(self):
+        with app.test_client() as client:
+            resp = client.get(f"/posts/{self.post.id}")
+            html = resp.get_data(as_text=True)
 
-    #         self.assertEqual(resp.status_code, 200)
-    #         self.assertIn("good content", html)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("good content", html)
 
-    # def test_new_post(self):
-    #     with app.test_client() as client:
-    #         d = {"title": "new post", "content": "new content"}
-    #         resp = client.post(f"/users/{self.user.id}/posts/new", data=d, follow_redirects=True)
-    #         html = resp.get_data(as_text=True)
+    def test_new_post(self):
+        with app.test_client() as client:
+            d = {"title": "new post", "content": "new content"}
+            resp = client.post(f"/users/{self.user.id}/posts/new", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
 
-    #         self.assertEqual(resp.status_code, 200)
-    #         self.assertIn(self.fullname, html)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn(self.fullname, html)
 
-    # def test_edit_post(self):
-    #     with app.test_client() as client:
-    #         d = {"title": "updated post", "content": "updated content"}
-    #         resp = client.post(f"/posts/{self.post.id}/edit", data=d, follow_redirects=True)
-    #         html = resp.get_data(as_text=True)
+    def test_edit_post(self):
+        with app.test_client() as client:
+            d = {"title": "updated post", "content": "updated content"}
+            resp = client.post(f"/posts/{self.post.id}/edit", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
 
-    #         self.assertEqual(resp.status_code, 200)
-    #         self.assertIn("updated post", html)
-    #         self.assertIn("updated content", html)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("updated post", html)
+            self.assertIn("updated content", html)
