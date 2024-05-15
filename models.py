@@ -35,8 +35,29 @@ class Post(db.Model):
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
         )
+    tagged_with = db.relationship('PostTag', backref='post')
 
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    name = db.Column(db.Text, unique=True, nullable=False)
+    applied_to = db.relationship('PostTag', backref='tag')
 
-
+class PostTag(db.Model):
+    __tablename__ = 'posts_tags'
+    post_id = db.Column(
+        db.Integer,
+        db.ForeignKey('posts.id'),
+        primary_key=True,
+        nullable=False,
+        )
+    tag_id = db.Column(
+        db.Integer,
+        db.ForeignKey('tags.id'),
+        primary_key=True,
+        nullable=False,
+        )
 
 
