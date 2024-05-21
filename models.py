@@ -35,7 +35,7 @@ class Post(db.Model):
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
         )
-    tagged_with = db.relationship('PostTag', backref='post')
+    # tagged_with = db.relationship('PostTag', backref='post')
 
 class Tag(db.Model):
     __tablename__ = 'tags'
@@ -44,6 +44,7 @@ class Tag(db.Model):
                    autoincrement=True)
     name = db.Column(db.Text, unique=True, nullable=False)
     applied_to = db.relationship('PostTag', backref='tag')
+    posts = db.relationship('Post', secondary='posts_tags', backref='tags')
 
 class PostTag(db.Model):
     __tablename__ = 'posts_tags'

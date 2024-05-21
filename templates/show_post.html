@@ -3,6 +3,13 @@
 <h1>{{ post.title }}</h1>
 <p>{{ post.content }}</p>
 
+Tags:
+{% for tag in post.tags %}
+    <span><a href='/tags/{{ tag.id }}'>{{ tag.name }}</a></span>
+{% endfor %}
+
+<br><br>
+
 <a href="/users/{{ user.id }}">
     <button id="cancel-edit-post-button">Cancel</button>
 </a>

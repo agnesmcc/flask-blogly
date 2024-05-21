@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>{{tag.name }}</h1>
+
+<ul>
+    {% for post in posts %}
+    <li><a href='/posts/{{ post.id }}'>{{ post.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<a href="/tags/{{ tag.id }}/edit">
+    <button id="edit-tag-button">Edit</button>
+</a>
+
+<!-- https://stackoverflow.com/a/58334867 -->
+    <form id="delete-form" style='display:inline' method="post" action="/tags/{{ tag.id }}/delete"></form>
+<a onclick="document.getElementById('delete-form').submit();">
+    <button id="delete-tag-button">Delete</button>
+</a>
+
+{% endblock %}

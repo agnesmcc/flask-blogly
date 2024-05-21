@@ -8,6 +8,12 @@
     <label id="content-label" for="content">Content:</label>
     <input type="text" id="content-input" name="content">
     <br>
+
+    {% for tag in tags %}
+    <input type="checkbox" id="{{ tag.name }}" name="selected_tags" value="{{ tag.name }}">
+    <label for="{{ tag.name }}">{{ tag.name }}</label><br>
+    {% endfor %}
+
     <a href="/users/{{ user.id }}">
         <button type=button id="cancel-create-post-button">Cancel</button>
     </a>

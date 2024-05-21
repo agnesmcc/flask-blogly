@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, redirect, request
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 app.debug = True
@@ -77,7 +77,8 @@ def delete_user(user_id):
 def new_post(user_id):
     user = db.session.get(User, user_id)
     if request.method == "GET":
-        return render_template('create_post.html', user=user)
+        tags = Tag.query.all()
+        return render_template('create_post.html', user=user, tags=tags)
     else:
         print('new post being created')
         title = request.form.get('title', '')
@@ -85,6 +86,12 @@ def new_post(user_id):
         print(title, content)
         new_post = Post(title=title, content=content, user_id=user.id)
         db.session.add(new_post)
+        db.session.commit()
+        selected_checkboxes = request.form.getlist('selected_tags')
+        for tag in selected_checkboxes:
+            found_tag = Tag.query.filter_by(name=tag).one()
+            new_post_tag = PostTag(post_id=new_post.id, tag_id=found_tag.id)
+            db.session.add(new_post_tag)
         db.session.commit()
         return redirect(f'/users/{user.id}')
 
@@ -97,7 +104,10 @@ def get_post(post_id):
 def edit_post(post_id):
     post = db.session.get(Post, post_id)
     if request.method == "GET":
-        return render_template('edit_post.html', post=post)
+        tags = Tag.query.all()
+        post_tags = PostTag.query.filter_by(post_id=post_id).all()
+        post_tags = [pt.tag for pt in post_tags] 
+        return render_template('edit_post.html', post=post, tags=tags, post_tags=post_tags)
     else:
         print('post being edited')
         title = request.form.get('title', '')
@@ -106,6 +116,13 @@ def edit_post(post_id):
         post.title = title
         post.content = content
         db.session.add(post)
+        db.session.commit()
+        post_tags = PostTag.query.filter_by(post_id=post_id).delete()
+        selected_checkboxes = request.form.getlist('selected_tags')
+        for tag in selected_checkboxes:
+            found_tag = Tag.query.filter_by(name=tag).one()
+            new_post_tag = PostTag(post_id=post_id, tag_id=found_tag.id)
+            db.session.add(new_post_tag)
         db.session.commit()
         return redirect(f'/posts/{post.id}')
 
@@ -116,3 +133,51 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return redirect(f'/users/{user_id}')
+
+### Tag routes ###
+    
+@app.route('/tags')
+def list_tags():
+    tags = Tag.query.all()
+    return render_template('show_tags.html', tags=tags)
+
+@app.route('/tags/<tag_id>')
+def get_tag(tag_id):
+    tag = db.session.get(Tag, tag_id)
+    posts = tag.posts
+    return render_template('show_tag.html', tag=tag, posts=posts)
+
+@app.route('/tags/new', methods=['GET', 'POST'])
+def new_tag():
+    if request.method == "GET":
+        return render_template('create_tag.html')
+    else:
+        print('new tag being created')
+        name = request.form.get('name', '')
+        print(name)
+        new_tag = Tag(name=name)
+        db.session.add(new_tag)
+        db.session.commit()
+        return redirect(f'/tags')
+
+@app.route('/tags/<tag_id>/edit', methods=['GET', 'POST'])
+def edit_tag(tag_id):
+    tag = db.session.get(Tag, tag_id)
+    if request.method == "GET":
+        return render_template('edit_tag.html', tag=tag)
+    else:
+        print('tag being edited')
+        name = request.form.get('name', '')
+        print(name)
+        tag.name = name
+        db.session.add(tag)
+        db.session.commit()
+        return redirect(f'/tags/{tag.id}')
+
+@app.route('/tags/<tag_id>/delete', methods=['POST'])
+def delete_tag(tag_id):
+    tag = db.session.get(Tag, tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect(f'/tags')
+
